@@ -2,13 +2,18 @@ import {BottomComponent, Button, Header2Text} from '@/components';
 import {Layout} from '@/config/theme';
 import {colors} from '@/constants';
 import {SUCCESS} from '@/constants/routes';
+import {setCurrentScore, setPlayers} from '@/reducers/UsersReducer';
 import {useIsFocused} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 const GameScreen = ({navigation}) => {
+  const dispatch = useDispatch();
   const categories = useSelector(state => state.categories);
+  const {currentScore, currentPlayer, players} = useSelector(
+    state => state.users,
+  );
   const isFocused = useIsFocused();
   const [isWrongAnswer, setIsWrongAnswer] = useState(false);
   const [answer, setAnswer] = useState({});
@@ -46,6 +51,9 @@ const GameScreen = ({navigation}) => {
     // Answer is CORRECT!
     if (joinedGuess !== '' && joinedGuess === answer.name) {
       setIsWrongAnswer(false);
+
+      updatePlayerScore();
+
       navigation.navigate(SUCCESS);
     } else if (
       // Finished guessing but answer is WRONG!
@@ -63,6 +71,23 @@ const GameScreen = ({navigation}) => {
     setAnswer({});
     setShuffledAnswer([]);
     setGuess([]);
+    setCurrentScore(0);
+  };
+
+  /* Updates player score */
+  const updatePlayerScore = () => {
+    const copyPlayers = [...players];
+    const currentPlayerIdx = copyPlayers.findIndex(
+      i => i.name === currentPlayer,
+    );
+    if (currentPlayerIdx >= 0) {
+      copyPlayers[currentPlayerIdx] = {
+        name: currentPlayer,
+        score: currentScore, // Update with new score
+      };
+      copyPlayers.sort((a, b) => b.score - a.score); // Sort list in descending order
+      dispatch(setPlayers(copyPlayers)); // Update players array
+    }
   };
 
   /* Picks a random answer word from the API response array  */
@@ -88,6 +113,8 @@ const GameScreen = ({navigation}) => {
 
     // While there remain elements to shuffle.
     while (currentIndex != 0) {
+      dispatch(setCurrentScore(currentScore + 2));
+
       // Pick a remaining element.
       randomIndex = Math.floor(Math.random() * currentIndex);
       currentIndex--;
@@ -98,6 +125,8 @@ const GameScreen = ({navigation}) => {
         array[currentIndex],
       ];
     }
+
+    dispatch(setCurrentScore(currentScore + array.length)); // Multiply with array.length to increase score based on word length
 
     return array;
   };
