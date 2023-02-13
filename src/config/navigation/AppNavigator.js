@@ -32,7 +32,16 @@ const ApplicationNavigator = () => {
             gestureEnabled: false,
           })}>
           <Stack.Screen name={INPUTPLAYER} component={InputPlayerScreen} />
-          <Stack.Screen name={DASHBOARD} component={DashboardScreen} />
+          <Stack.Screen
+            name={DASHBOARD}
+            component={DashboardScreen}
+            options={{
+              headerShown: true,
+              gestureEnabled: true,
+              title: ' ',
+              headerBackTitleVisible: false,
+            }}
+          />
           <Stack.Screen
             name={GAME}
             component={GameScreen}
