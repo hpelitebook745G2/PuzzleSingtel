@@ -1,7 +1,7 @@
 import {BottomComponent, Button, Header2Text} from '@/components';
 import {Layout} from '@/config/theme';
 import {colors, images} from '@/constants';
-import {LEADERBOARD} from '@/constants/routes';
+import {LEADERBOARD, SUCCESS} from '@/constants/routes';
 import React from 'react';
 import {Image, StyleSheet, View} from 'react-native';
 
@@ -30,7 +30,9 @@ const SuccessScreen = ({navigation}) => {
         <Button
           style={styles.btnStart}
           text={'OPEN LEADERBOARD'}
-          onPress={() => navigation.navigate(LEADERBOARD)}
+          onPress={() =>
+            navigation.navigate(LEADERBOARD, {fromScreen: SUCCESS})
+          }
         />
       </BottomComponent>
     </View>

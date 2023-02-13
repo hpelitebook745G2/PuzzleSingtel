@@ -1,7 +1,7 @@
 import {BottomComponent, Button, Header1Text, Header2Text} from '@/components';
 import {Layout} from '@/config/theme';
 import {colors} from '@/constants';
-import {GAME, LEADERBOARD} from '@/constants/routes';
+import {DASHBOARD, GAME, LEADERBOARD} from '@/constants/routes';
 import {
   setCountries,
   setFruits,
@@ -150,7 +150,9 @@ const DashboardScreen = ({navigation}) => {
         <Button
           style={styles.btnStart}
           text={'OPEN LEADERBOARD'}
-          onPress={() => navigation.navigate(LEADERBOARD)}
+          onPress={() =>
+            navigation.navigate(LEADERBOARD, {fromScreen: DASHBOARD})
+          }
         />
       </BottomComponent>
 
