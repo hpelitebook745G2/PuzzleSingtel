@@ -6,16 +6,31 @@ import {
   PlayerRow,
 } from '@/components';
 import {Layout} from '@/config/theme';
-import React from 'react';
-import {FlatList, StyleSheet, View} from 'react-native';
-import {useSelector} from 'react-redux';
-
 import {SUCCESS} from '@/constants/routes';
 import {StackActions} from '@react-navigation/native';
+import React from 'react';
+import {FlatList, StyleSheet, View} from 'react-native';
+import Share from 'react-native-share';
+import {useSelector} from 'react-redux';
 
 const LeaderboardScreen = ({route, navigation}) => {
-  const {players, currentPlayer} = useSelector(state => state.users);
+  const {players, currentPlayer, currentScore} = useSelector(
+    state => state.users,
+  );
   const {fill, selectedItem, unselectedItem} = Layout();
+
+  const shareScore = async () => {
+    const shareOptions = {
+      message: `Check out my score: ${currentScore}!`,
+      // social: Share.Social.FACEBOOK,
+    };
+
+    try {
+      await Share.open(shareOptions);
+    } catch (error) {
+      console.log('Error =>', error);
+    }
+  };
 
   return (
     <View style={[fill, {backgroundColor: 'white'}]}>
@@ -42,6 +57,7 @@ const LeaderboardScreen = ({route, navigation}) => {
         />
       </View>
       <BottomComponent>
+        <Button style={{}} text={'SHARE SCORE'} onPress={shareScore} />
         <Button
           style={styles.btnStart}
           text={'BACK TO DASHBOARD'}
@@ -60,8 +76,7 @@ const LeaderboardScreen = ({route, navigation}) => {
 
 const styles = StyleSheet.create({
   btnStart: {
-    marginTop: 50,
-    marginBottom: 30,
+    marginVertical: 30,
   },
 });
 
